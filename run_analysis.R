@@ -1,4 +1,4 @@
-###00import LIBS
+###00import Packages
 library(reshape2)
 library(dplyr)
 
@@ -36,6 +36,8 @@ xdata <- rbind(xtrain, xtest, col.na)
 ydata <- rbind(ytrain, ytest)
 sdata <- rbind(strain, stest)
 
+
+names(xdata) <- features[,2]
 MergeDat <- cbind(sdata, ydata, xdata)
 
 
@@ -60,32 +62,21 @@ names(mn_sd)<-gsub("Mag", "Magnitude", names(mn_sd))
 names(mn_sd)<-gsub("^t", "Time", names(mn_sd))
 names(mn_sd)<-gsub("^f", "Frequency", names(mn_sd))
 names(mn_sd)<-gsub("tBody", "TimeBody", names(mn_sd))
-names(mn_sd)<-gsub("-mean()", "Mean", names(mn_sd), ignore.case = TRUE)
-names(mn_sd)<-gsub("-std()", "STD", names(mn_sd), ignore.case = TRUE)
-names(mn_sd)<-gsub("-freq()", "Frequency", names(mn_sd), ignore.case = TRUE)
+names(mn_sd)<-gsub("-[Mm]ean[()]+", "Mean", names(mn_sd), ignore.case = TRUE)
+names(mn_sd)<-gsub("-std[()]+", "STD", names(mn_sd), ignore.case = TRUE)
+names(mn_sd)<-gsub("freq[()]+", "Frequency", names(mn_sd), ignore.case = TRUE)
 names(mn_sd)<-gsub("angle", "Angle", names(mn_sd))
 names(mn_sd)<-gsub("gravity", "Gravity", names(mn_sd))
+
+
+
+
 ###05 From the data set in step 4, creates a second, independent tidy data set 
 ###th the average of each variable for each activity and each subject.
 
+fdata <- mn_sd %>% group_by(subject ,activity) %>%
+    summarise_all(funs(mean))
 
-x <- c("-mean()")
-gsub("-mean\()", "Mean", x)
+write.table(fdata, "./data/TidyData.txt", row.names = FALSE)
 
-
-
-
-
-
-
-
-
-#namescol <-colnames(MergeDat)
-#c <-c(grep("([Mm]ean|std)", namescol), 1,2)
-#D <- MergeDat[,c]
-
-x <- c(1,2,2,1)
-y <- factor(x, levels = c(1, 2), labels = c("a", "b"))
-
-MergeDat$code <- activity[MergeDat$code, 2] #esto es muy util
 
