@@ -32,7 +32,7 @@ strain <- read.table("./data/UCI HAR Dataset/train/subject_train.txt")
 
 #merge test-train
 
-xdata <- rbind(xtrain, xtest, col.na)
+xdata <- rbind(xtrain, xtest)
 ydata <- rbind(ytrain, ytest)
 sdata <- rbind(strain, stest)
 
